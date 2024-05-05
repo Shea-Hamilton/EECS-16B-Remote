@@ -39,7 +39,6 @@ void setup() {
 void loop() {
   if (IR.decode()) {
     unsigned long irCode = IR.decodedIRData.decodedRawData;
-    // Only update lastIRCode if it's different from the last received command
     if (irCode != lastIRCode) {
       lastIRCode = irCode;
     }
@@ -52,17 +51,15 @@ void loop() {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   duration = pulseIn(echoPin, HIGH);
-  distance = duration * 0.034 / 2;  // Calculate distance in cm
+  distance = duration * 0.034 / 2;  // in cm
   Serial.print("Distance: ");
   Serial.print(distance);
   Serial.println(" cm");
-  // Check if the distance is less than a threshold
-  if (distance < 43) { // Adjust the threshold distance as needed
+  if (distance < 43) {
     digitalWrite(LEFT_MOTOR, LOW);
     digitalWrite(RIGHT_MOTOR, LOW);
     turnAround();
   } else {
-    // If no obstacle detected, execute the last received command
     executeCommand(lastIRCode);
   }
 }
@@ -85,7 +82,6 @@ void executeCommand(unsigned long irCode) {
       stopMotors();
       break;
     default:
-      // Do nothing or handle other cases
       break;
   }
  
@@ -133,7 +129,7 @@ void stopMotors() {
 void triggerBuzzer() {
   // Activate the buzzer
   digitalWrite(buzzerPin, HIGH);
-  delay(100); // Buzzer duration (adjust as needed)
+  delay(100); 
   digitalWrite(buzzerPin, LOW);
   digitalWrite(redLed, LOW);
   digitalWrite(greenLed, LOW);
